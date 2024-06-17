@@ -1,0 +1,49 @@
+@media print { @page {size: auto !important} }
+th{
+    border: 1px solid black !important;
+    text-align: center !important;
+}
+td{
+    text-align: center !important;
+}
+td.subject-name{
+    text-align: left !important;
+    padding-left: 10px !important;
+}
+table.marksheet{
+    width: 100%;
+    border: 1px solid #828bb2 !important;
+}
+table.marksheet th{
+    border: 1px solid #828bb2 !important;
+}
+table.marksheet td{
+    border: 1px solid #828bb2 !important;
+}
+table.marksheet thead tr{
+    border: 1px solid #828bb2 !important;
+}
+table.marksheet tbody tr{
+    border: 1px solid #828bb2 !important;
+}
+
+.studentInfoTable{
+    width: 100% !important;
+    padding: 0px !important;
+}
+
+.studentInfoTable td{
+    padding: 0px !important;
+    text-align: left !important;
+    padding-left: 15px !important;
+}
+h4{
+    text-align: left !important;
+}
+
+@media print {
+    .fs {page-break-after: always;}
+    td, th{
+       font-weight:600;
+    }
+  }
