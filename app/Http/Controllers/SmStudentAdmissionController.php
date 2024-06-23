@@ -42,6 +42,8 @@ use Illuminate\Support\Facades\Hash;
 use App\SmBillIssue;
 use App\SmBillIssueItem;
 use App\Bill;
+use App\SmFaculity;
+use FaculitySeeder;
 
 class SmStudentAdmissionController extends Controller
 {
@@ -69,8 +71,9 @@ class SmStudentAdmissionController extends Controller
         $driver_lists = SmStaff::where([['active_status', '=', '1'], ['role_id', 9]])->get();
         $dormitory_lists = SmDormitoryList::where('active_status', '=', '1')->get();
         $categories = SmStudentCategory::all();
+        $faculitys = SmFaculity::all();
         $sessions = SmSession::where('active_status', '=', '1')->get();
-        return view('backEnd.studentInformation.student_admission', compact('classes', 'religions', 'blood_groups', 'genders', 'route_lists', 'vehicles', 'dormitory_lists', 'categories', 'sessions', 'max_admission_id', 'max_roll_id', 'driver_lists'));
+        return view('backEnd.studentInformation.student_admission', compact('classes', 'religions', 'blood_groups', 'genders', 'route_lists', 'vehicles', 'dormitory_lists', 'categories', 'sessions', 'max_admission_id', 'max_roll_id', 'driver_lists','faculitys'));
     }
 
 
@@ -202,7 +205,7 @@ class SmStudentAdmissionController extends Controller
                 'date_of_birth' => 'required',
                 'guardians_email' => "required|unique:sm_parents,guardians_email",
                 'guardians_phone' => "required|unique:sm_parents,guardians_mobile",
-            ]);
+             ]);
         } else {
             $request->validate([
                 'admission_number' => 'required',
@@ -213,6 +216,7 @@ class SmStudentAdmissionController extends Controller
                 'first_name' => 'required',
                 'date_of_birth' => 'required',
                 'session' => 'required',
+ 
             ]);
         }
 
@@ -371,6 +375,8 @@ class SmStudentAdmissionController extends Controller
                         $student->permanent_address = $request->permanent_address;
                         $student->route_list_id = $request->route;
                         $student->dormitory_id = $request->dormitory_name;
+                        $student->faculity_id = $request->faculity_id;
+
 
                         $student->room_id = $request->room_number;
                         //$driver_id=SmVehicle::where('id','=',$request->vehicle)->first();
@@ -402,7 +408,7 @@ class SmStudentAdmissionController extends Controller
                         $student->document_file_3 = $document_file_3;
                         $student->document_title_4 = $request->document_title_4;
                         $student->document_file_4 = $document_file_4;
-
+                        // dd($student);
                         $student->save();
                         $student->toArray();
 
@@ -433,39 +439,40 @@ class SmStudentAdmissionController extends Controller
 
 
     // simple type student add 
-     public function newStudentStore(Request $request, $cls, $section){
-         if($request->isMethod('post')){
-                // dd($request->all());
-                if(!$request->filled('id')){
+    public function newStudentStore(Request $request, $cls, $section)
+    {
+        if ($request->isMethod('post')) {
+            // dd($request->all());
+            if (!$request->filled('id')) {
 
-                    $student = new SmStudent();
-                    $student->role_id = 2;
-                }else{
+                $student = new SmStudent();
+                $student->role_id = 2;
+            } else {
 
-                    $student=SmStudent::find($request->id);
-                }
-                $student->full_name = $request->full_name;
-                $student->nepali_dob = $request->dob;
-                $student->class_id = $cls;
-                $student->section_id = $section;
-                $student->roll_no = $request->roll;
-                $student->regno = $request->adm;
+                $student = SmStudent::find($request->id);
+            }
+            $student->full_name = $request->full_name;
+            $student->nepali_dob = $request->dob;
+            $student->class_id = $cls;
+            $student->section_id = $section;
+            $student->roll_no = $request->roll;
+            $student->regno = $request->adm;
             // dd($student);
-            $ses = SmSession::where('is_default',1)->first();
+            $ses = SmSession::where('is_default', 1)->first();
             $student->session_id = $ses->id;
             $student->save();
-            return view('backEnd.academics.new_std_single',['std'=>$student]);
+            return view('backEnd.academics.new_std_single', ['std' => $student]);
 
             // Toastr::success('Operation successful', 'Success');
             // return redirect()->back();
-         }else{
-             $classs_id = $cls;
-             $section_id = $section;
+        } else {
+            $classs_id = $cls;
+            $section_id = $section;
 
-             $students=SmStudent::where('section_id',$section)->where('class_id',$cls)->get();
-             return view('backEnd.academics.new_std',compact('classs_id','section_id','students'));
-         }
-     }
+            $students = SmStudent::where('section_id', $section)->where('class_id', $cls)->get();
+            return view('backEnd.academics.new_std', compact('classs_id', 'section_id', 'students'));
+        }
+    }
 
     function admissionPic(Request $r)
     {
@@ -587,11 +594,11 @@ class SmStudentAdmissionController extends Controller
             ->get();
 
 
-        if (ApiBaseMethod::checkUrl($request->fullUrl())) {
-            $data = [];
-            $data['student_list'] = $student_list->toArray();
-            // $data['classes'] = $classes->toArray();
-            return ApiBaseMethod::sendResponse($data, null);
+            if (ApiBaseMethod::checkUrl($request->fullUrl())) {
+                $data = [];
+                $data['student_list'] = $student_list->toArray();
+                // $data['classes'] = $classes->toArray();
+                return ApiBaseMethod::sendResponse($data, null);
         }
 
         return view('backEnd.studentInformation.student_details', compact('students', 'classes'));
@@ -622,7 +629,7 @@ class SmStudentAdmissionController extends Controller
         $class_id = $request->class;
         $name = $request->name;
         $roll_no = $request->roll_no;
-
+        
         if (ApiBaseMethod::checkUrl($request->fullUrl())) {
             $data = [];
             $data['students'] = $students->toArray();
@@ -695,9 +702,9 @@ class SmStudentAdmissionController extends Controller
             }
         }
         // dd($unpaiditems);
-        $bills = Bill::where('student_id',$id)->get();
+        $bills = Bill::where('student_id', $id)->get();
 
-        return view('backEnd.studentInformation.student_view', compact('student_detail', 'driver_info', 'fees_assigneds', 'fees_discounts', 'exams', 'documents', 'timelines', 'siblings', 'grades', 'unpaiditems','paiditems','bills'));
+        return view('backEnd.studentInformation.student_view', compact('student_detail', 'driver_info', 'fees_assigneds', 'fees_discounts', 'exams', 'documents', 'timelines', 'siblings', 'grades', 'unpaiditems', 'paiditems', 'bills'));
     }
 
     public function uploadDocument(Request $request)
@@ -928,6 +935,7 @@ class SmStudentAdmissionController extends Controller
         $driver_lists = SmStaff::where([['active_status', '=', '1'], ['role_id', 9]])->get();
 
         $categories = SmStudentCategory::all();
+        $faculitys = SmFaculity::all();
         $sessions = SmSession::where('active_status', '=', '1')->get();
 
         $siblings = SmStudent::where('parent_id', $student->parent_id)->get();
@@ -937,6 +945,7 @@ class SmStudentAdmissionController extends Controller
             $data = [];
             $data['student'] = $student;
             $data['classes'] = $classes->toArray();
+            $data['faculitys'] = $faculitys->toArray();
             $data['religions'] = $religions->toArray();
             $data['blood_groups'] = $blood_groups->toArray();
             $data['genders'] = $genders->toArray();
@@ -949,7 +958,7 @@ class SmStudentAdmissionController extends Controller
             $data['driver_lists'] = $driver_lists->toArray();
             return ApiBaseMethod::sendResponse($data, null);
         }
-        return view('backEnd.studentInformation.student_edit', compact('student', 'classes', 'sections', 'religions', 'blood_groups', 'genders', 'route_lists', 'vehicles', 'dormitory_lists', 'categories', 'sessions', 'siblings', 'driver_lists'));
+        return view('backEnd.studentInformation.student_edit', compact('student', 'classes', 'sections', 'religions', 'blood_groups', 'genders', 'route_lists', 'vehicles', 'dormitory_lists', 'categories', 'sessions', 'siblings', 'driver_lists','faculitys'));
     }
 
 
@@ -1083,6 +1092,7 @@ class SmStudentAdmissionController extends Controller
                 'admission_number' => 'required',
                 'roll_number' => 'required',
                 'class' => 'required',
+                'faculity_id' => 'required',
                 'section' => 'required',
                 'gender' => 'required',
                 'first_name' => 'required',
@@ -1095,6 +1105,8 @@ class SmStudentAdmissionController extends Controller
                 'admission_number' => 'required',
                 'roll_number' => 'required',
                 'class' => 'required',
+                'faculity_id' => 'required',
+
                 'section' => 'required',
                 'gender' => 'required',
                 'first_name' => 'required',
@@ -1106,6 +1118,8 @@ class SmStudentAdmissionController extends Controller
                 'roll_number' => 'required',
                 'class' => 'required',
                 'section' => 'required',
+                'faculity_id' => 'required',
+
                 'gender' => 'required',
                 'first_name' => 'required',
                 'date_of_birth' => 'required'
@@ -1116,6 +1130,8 @@ class SmStudentAdmissionController extends Controller
                 'roll_number' => 'required',
                 'class' => 'required',
                 'section' => 'required',
+                'faculity_id' => 'required',
+
                 'gender' => 'required',
                 'first_name' => 'required',
                 'date_of_birth' => 'required',
@@ -1444,6 +1460,7 @@ class SmStudentAdmissionController extends Controller
                             $student->parent_id = $parent->id;
                         }
                         $student->class_id = $request->class;
+                        $student->faculity_id = $request->faculity_id;
                         $student->section_id = $request->section;
                         $student->session_id = $request->session;
                         $student->user_id = $user_stu->id;
@@ -1513,7 +1530,7 @@ class SmStudentAdmissionController extends Controller
                         $student->save();
                         DB::commit();
                         Toastr::success('Operation successful', 'Success');
-                        return redirect('student-list');
+                        return redirect()->back();
                     } catch (\Exception $e) {
                         DB::rollback();
                         Toastr::error('Operation Failed', 'Failed');
@@ -1708,18 +1725,17 @@ class SmStudentAdmissionController extends Controller
     //studentReport modified by jmrashed
     public function studentReport(Request $request)
     {
-        
     }
 
     //student report search modified by jmrashed
     public function studentReportSearch(Request $request)
     {
         // dd($request);
-        if($request->isMethod('post')){
+        if ($request->isMethod('post')) {
             $students = SmStudent::query();
 
             $students->where('active_status', 1);
-    
+
             //if no class is selected
             if ($request->class != "") {
                 $students->where('class_id', $request->class);
@@ -1732,21 +1748,21 @@ class SmStudentAdmissionController extends Controller
             if ($request->type != "") {
                 $students->where('student_category_id', $request->type);
             }
-    
+
             //if no gender is selected
             if ($request->gender != "") {
                 $students->where('gender_id', $request->gender);
             }
             $students = $students->get();
-    
+
             $classes = SmClass::where('active_status', 1)->get();
             $types = SmStudentCategory::all();
             $genders = SmBaseSetup::where('active_status', '=', '1')->where('base_group_id', '=', '1')->get();
-    
+
             $class_id = $request->class;
             $type_id = $request->type;
             $gender_id = $request->gender;
-    
+
             if (ApiBaseMethod::checkUrl($request->fullUrl())) {
                 $data = [];
                 $data['students'] = $students->toArray();
@@ -1758,9 +1774,9 @@ class SmStudentAdmissionController extends Controller
                 $data['gender_id'] = $gender_id;
                 return ApiBaseMethod::sendResponse($data, null);
             }
-    
+
             return view('backEnd.studentInformation.student_report', compact('students', 'classes', 'types', 'genders', 'class_id', 'type_id', 'gender_id'));
-        }else{
+        } else {
             $classes = SmClass::where('active_status', 1)->get();
             $types = SmStudentCategory::all();
             $genders = SmBaseSetup::where('active_status', '=', '1')->where('base_group_id', '=', '1')->get();
@@ -1773,8 +1789,7 @@ class SmStudentAdmissionController extends Controller
                 return ApiBaseMethod::sendResponse($data, null);
             }
             return view('backEnd.studentInformation.student_report', compact('classes', 'types', 'genders'));
-            }
-        
+        }
     }
 
     public function studentAttendanceReport(Request $request)

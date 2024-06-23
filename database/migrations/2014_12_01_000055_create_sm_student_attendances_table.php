@@ -17,8 +17,8 @@ class CreateSmStudentAttendancesTable extends Migration
 
         Schema::create('sm_student_attendances', function (Blueprint $table) {
             $table->increments('id');
-            // $table->json('attendance_type',10)->nullable()->comment('Present: P Late: L Absent: A Holiday: H Half Day: F');
-            $table->string('attendance_type',10)->nullable()->comment('Present: P Late: L Absent: A Holiday: H Half Day: F');
+            $table->json('attendance_type',10)->nullable()->comment('Present: P Late: L Absent: A Holiday: H Half Day: F');
+            // $table->string('attendance_type',10)->nullable()->comment('Present: P Late: L Absent: A Holiday: H Half Day: F');
             $table->string('notes',500)->nullable();
             $table->date('attendance_date')->nullable();
             $table->timestamps();

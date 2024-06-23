@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class SmStudent extends Model
 {
+
+
+	protected $fillable = [
+		'faculity_id'
+	];
     public function parents(){
         return $this->belongsTo('App\SmParent', 'parent_id', 'id');
     }
@@ -37,6 +42,9 @@ class SmStudent extends Model
 		return $this->belongsTo('App\SmSession', 'session_id', 'id');
 	}
     //student class name 
+    public function faculity(){
+        return $this->belongsTo(SmFaculity::class , 'faculity_id', 'id');
+    }
     public function class(){
         return $this->belongsTo('App\SmClass', 'class_id', 'id');
     }

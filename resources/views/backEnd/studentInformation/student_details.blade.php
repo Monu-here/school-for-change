@@ -123,6 +123,7 @@
                                     <tr>
                                         <th>@lang('lang.admission')@lang('lang.no')</th>
                                         <th>@lang('lang.roll') @lang('lang.no')</th>
+                                        <th>@lang(' faculity') </th>
                                         <th>@lang('lang.name')</th>
                                         <th>@lang('lang.class')</th>
                                         <th>@lang('lang.father_name')</th>
@@ -139,6 +140,7 @@
                                     <tr>
                                         <td>{{$student->admission_no}}</td>
                                         <td>{{$student->roll_no}}</td>
+                                        <td>{{$student->faculity->name}}</td>
                                         <td>{{$student->first_name.' '.$student->last_name}}</td> 
                                         <td>{{!empty($student->className)?$student->className->class_name:''}}</td>
 

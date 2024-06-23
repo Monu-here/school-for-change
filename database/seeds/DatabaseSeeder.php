@@ -12,13 +12,10 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
+        $this->call(FaculitySeeder::class);
 
         $this->call(sm_schoolsSeeder::class);
-        // $this->call(rolesSeeder::class);
-        $this->call(sm_base_groupsSeeder::class);
-        $this->call(sm_base_setupsSeeder::class);
-        $this->call(usersSeeder::class);
-
+       
         $this->call(sm_classesSeeder::class);
         $this->call(sm_sectionsSeeder::class);
         $this->call(sm_class_sectionsSeeder::class);
@@ -26,17 +23,11 @@ class DatabaseSeeder extends Seeder
         $this->call(sm_visitorsSeeder::class);
         $this->call(continentsSeeder::class);
         $this->call(countriesSeeder::class);
-        $this->call(languagesSeeder::class);
-        $this->call(sm_about_pagesSeeder::class);
-        $this->call(sm_academic_yearsSeeder::class);
-        $this->call(sm_date_formatsSeeder::class);
-        $this->call(sm_designationsSeeder::class);
-        $this->call(sm_human_departmentsSeeder::class);
-        $this->call(sm_staffsSeeder::class);
+         $this->call(sm_academic_yearsSeeder::class);
+         $this->call(sm_staffsSeeder::class);
 
         $this->call(sm_expense_headsSeeder::class);
-        $this->call(sm_payment_methhodsSeeder::class);
-        $this->call(sm_add_expensesSeeder::class);
+         $this->call(sm_add_expensesSeeder::class);
         $this->call(sm_income_headsSeeder::class);
         $this->call(sm_add_incomesSeeder::class);
         $this->call(sm_bank_accountsSeeder::class);
@@ -189,10 +180,6 @@ class DatabaseSeeder extends Seeder
         $this->call(sm_system_versionsSeeder::class);
         $this->call(sm_teacher_upload_contentsSeeder::class);
         $this->call(sm_temporary_meritlistSeeder::class);
-        $this->call(sm_temporary_meritlistsSeeder::class);
-        $this->call(sm_testimonialsSeeder::class);
-        $this->call(sm_to_dosSeeder::class);
-        $this->call(sm_upload_contentsSeeder::class);
-        $this->call(sm_user_logsSeeder::class);
-    }
+          $this->call(sm_to_dosSeeder::class);
+      }
 }

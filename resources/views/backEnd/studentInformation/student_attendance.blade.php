@@ -36,7 +36,20 @@
                         {{ Form::open(['class' => 'form-horizontal', 'files' => true, 'url' => 'student/search', 'method' => 'POST', 'enctype' => 'multipart/form-data', 'id' => 'search_studentA']) }}
                             <div class="row">
                                 <input type="hidden" name="url" id="url" value="{{URL::to('/')}}">
-                                <div class="col-lg-4 mt-30-md">
+                                <div class="col-lg-3 mt-30-md">
+                                    <select class="niceSelect w-100 bb form-control{{ $errors->has('class') ? ' is-invalid' : '' }}" id="faculity_id" name="faculity_id">
+                                        <option data-display="@lang('faculity') *" value="">@lang('faculity') *</option>
+                                        @foreach($faculitys as $faculity)
+                                        <option value="{{$faculity->id}}" {{isset($faculity_id)? ($faculity_id == $faculity->id? 'selected': ''):'' }}>{{$faculity->name}}</option>
+                                        @endforeach
+                                    </select>
+                                     @if ($errors->has('class'))
+                                    <span class="invalid-feedback invalid-select" role="alert">
+                                        <strong>{{ $errors->first('class') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                                <div class="col-lg-3 mt-30-md">
                                     <select class="niceSelect w-100 bb form-control{{ $errors->has('class') ? ' is-invalid' : '' }}" id="select_class" name="class">
                                         <option data-display="@lang('lang.select_class') *" value="">@lang('lang.select_class') *</option>
                                         @foreach($classes as $class)
@@ -49,7 +62,7 @@
                                     </span>
                                     @endif
                                 </div>
-                                <div class="col-lg-4 mt-30-md" id="select_section_div">
+                                <div class="col-lg-3 mt-30-md" id="select_section_div">
                                     <select class="niceSelect w-100 bb form-control{{ $errors->has('section') ? ' is-invalid' : '' }}" id="select_section" name="section">
                                         <option data-display="@lang('lang.select_section') *" value="">@lang('lang.select_section') *</option>
                                     </select>
@@ -59,7 +72,7 @@
                                     </span>
                                     @endif
                                 </div>
-                                <div class="col-lg-4 mt-30-md">
+                                <div class="col-lg-3 mt-30-md">
                                     <div class="row no-gutters input-right-icon">
                                         <div class="col">
                                             <div class="input-effect">

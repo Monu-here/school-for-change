@@ -90,6 +90,25 @@
                             </div>
                             <div class="col-lg-3">
                                 <div class="input-effect">
+                                    <select class="niceSelect w-100 bb form-control{{ $errors->has('faculity') ? ' is-invalid' : '' }}" name="faculity_id" id="faculity_id">
+                                        <option data-display="@lang('faculity') *" value="">@lang('lang.faculity') *</option>
+                                        @foreach($faculitys as $faculity)
+                                            <option value="{{ $faculity->id }}" {{ $student->faculity->id == $faculity->id ? 'selected' : '' }}>
+                                                {{ $faculity->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <span class="focus-border"></span>
+                                    @if ($errors->has('faculity'))
+                                        <span class="invalid-feedback invalid-select" role="alert">
+                                            <strong>{{ $errors->first('faculity') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-3">
+                                <div class="input-effect">
                                     <select class="niceSelect w-100 bb form-control{{ $errors->has('class') ? ' is-invalid' : '' }}" name="class" id="classSelectStudent">
                                         <option data-display="@lang('lang.class') *" value="">@lang('lang.class') *</option>
                                         @foreach($classes as $class)

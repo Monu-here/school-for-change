@@ -64,7 +64,7 @@
 
                         <input type="hidden" name="url" id="url" value="{{URL::to('/')}}">
                         <div class="row mb-40 mt-30">
-                            <div class="col-lg-3">
+                            <div class="col-lg-2">
                                 <div class="input-effect">
                                     <input class="primary-input read-only-input form-control{{ $errors->has('admission_number') ? ' is-invalid' : '' }}" type="text" name="admission_number" value="{{$max_admission_id != ''? $max_admission_id + 1 : 1}}" readonly>
                                     <label>@lang('lang.admission') @lang('lang.number')</label>
@@ -77,6 +77,22 @@
                                 </div>
                             </div>
                             <div class="col-lg-3">
+                                <div class="input-effect">
+                                    <select class="niceSelect w-100 bb form-control{{ $errors->has('faculity') ? ' is-invalid' : '' }}" name="faculity_id" id=" ">
+                                        <option data-display="@lang('faculity') *" value="">@lang('lang.faculity') *</option>
+                                        @foreach($faculitys as $faculity)
+                                        <option value="{{$faculity->id}}" {{old('faculity') == $faculity->id? 'selected': ''}}>{{$faculity->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="focus-border"></span>
+                                    @if ($errors->has('class'))
+                                    <span class="invalid-feedback invalid-select" role="alert">
+                                        <strong>{{ $errors->first('class') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
                                 <div class="input-effect">
                                     <select class="niceSelect w-100 bb form-control{{ $errors->has('class') ? ' is-invalid' : '' }}" name="class" id="classSelectStudent">
                                         <option data-display="@lang('lang.class') *" value="">@lang('lang.class') *</option>
@@ -123,7 +139,7 @@
                            
                                 
                             
-                            <div class="col-lg-3">
+                            <div class="col-lg-2">
                                 <div class="input-effect" id="sectionStudentDiv">
                                     <select class="niceSelect w-100 bb form-control{{ $errors->has('section') ? ' is-invalid' : '' }}" name="section" id="sectionSelectStudent">
                                        <option data-display="@lang('lang.section') *" value="">@lang('lang.section') *</option>
